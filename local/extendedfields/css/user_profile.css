@@ -1,0 +1,60 @@
+.select2.select2-container {
+	width: 100%;
+}
+
+.select2.select2-container .select2-selection {
+	height: 48px;
+	border: 1px solid #d9d9d9;
+}
+
+.select2.select2-container .select2-selection .select2-selection__rendered {
+	line-height: 48px;
+}
+
+.ajax-form.licence-form {
+	max-width: 800px;
+	margin-left: 40px;
+}
+
+.license-properties {
+	font-size: 0.8em;
+}
+
+#profile-info {
+    font-family: arial, sans-serif;
+    background: #EFEFEF;
+    background-size: cover;
+    padding: 20px;
+}
+.main-breadcrumb {
+    color: #005696;
+    font-family: arial, sans-serif;
+    padding: 20px 0px 20px 20px;
+}
+.main-breadcrumb a {
+    color: #005696;
+}
+.main-breadcrumb a:hover {
+    text-decoration: none;
+}
+.employee-name {
+    font-size: 32px;
+    font-family: arial, sans-serif;
+    font-weight: bold;
+    color: #005696;
+}
+.profile-label {
+    color: #005696;
+    font-weight: bold;
+}
+.profile-content {
+    color: #636569;
+}
+
+img.profile.profile-default {
+	opacity: 0.2;
+}
+
+.ajax-form.licence-form {
+    display: none;
+}
