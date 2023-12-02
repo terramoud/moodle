@@ -27,6 +27,28 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/behat/lib.php');
 require_once($CFG->dirroot . '/course/lib.php');
 
+/**
+ * Customize the user action menu.
+ *
+ * @param array $userMenu The user action menu array.
+ * @return array The modified user action menu array.
+ */
+function get_custom_user_menu(array $userMenu): array
+{
+    global $PAGE;
+    $isCoursePage = $PAGE->course && $PAGE->context->contextlevel == CONTEXT_COURSE;
+    if ($isCoursePage) {
+        $gradesIndex = array_search('Grades', array_column($userMenu['items'], 'title'));
+        // Clone the "Grades" menu item and modify its properties
+        $newGradesItem = clone $userMenu['items'][$gradesIndex];
+        $newGradesItem->title = 'Grades for ' . $PAGE->course->shortname;
+        $newGradesItem->titleidentifier = 'grades' . $PAGE->course->id;
+        // Add the new menu item after the "Grades" item
+        array_splice($userMenu['items'], $gradesIndex + 1, 0, array($newGradesItem));
+    }
+    return $userMenu;
+}
+
 // Add block button in editing mode.
 $addblockbutton = $OUTPUT->addblockbutton();
 
@@ -78,6 +100,7 @@ if ($PAGE->has_secondary_navigation()) {
 $primary = new core\navigation\output\primary($PAGE);
 $renderer = $PAGE->get_renderer('core');
 $primarymenu = $primary->export_for_template($renderer);
+$primarymenu['user'] = get_custom_user_menu($primarymenu['user']);
 $buildregionmainsettings = !$PAGE->include_region_main_settings_in_header_actions() && !$PAGE->has_secondary_navigation();
 // If the settings menu will be included in the header then don't add it here.
 $regionmainsettingsmenu = $buildregionmainsettings ? $OUTPUT->region_main_settings_menu() : false;
@@ -85,6 +108,7 @@ $regionmainsettingsmenu = $buildregionmainsettings ? $OUTPUT->region_main_settin
 $header = $PAGE->activityheader;
 $headercontent = $header->export_for_template($renderer);
 
+//echo "<pre>" . print_r($primarymenu['user'], true) . "</pre>";
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, ['context' => context_course::instance(SITEID), "escape" => false]),
     'output' => $OUTPUT,
