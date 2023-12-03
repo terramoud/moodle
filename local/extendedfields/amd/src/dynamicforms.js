@@ -8,12 +8,11 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 		$('#showFormBtn').on('click', showForm);
 		$('#cancelBtn').on('click', hideForm);
 		$('.license-edit-icon').on('click', hideForm);
-		$('.license-edit-icon').click(function(){
-			licenseData = JSON.parse($(this).parents('tr').attr("data-license-json"))
+		$('#license_list').on('click', '.license-edit-icon', function() {
+			let licenseData = JSON.parse($(this).parents('tr').attr("data-license-json"))
 			console.log(licenseData)
 			showForm();
 			editForm(licenseData);
-
 		})
 
 		$("#licenseForm").submit(function(e) {
@@ -32,10 +31,10 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 				methodname: 'local_extendedfields_upload_license',
 				args: {jsonformdata: json},
 				done: function(response) {
-					responseObj = JSON.parse(response)
+					let responseObj = JSON.parse(response)
 					
 					if ($("#file").val()) {
-						newFormData = new FormData();
+						let newFormData = new FormData();
 						newFormData.append('license_id', responseObj.id)
 						newFormData.append('file', fileItem)
 						var xhr = new XMLHttpRequest();
@@ -110,8 +109,22 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 		    }
 		}
 
+		/**
+		 * Escapes double quotes in a JSON string by replacing them with HTML entity &quot;.
+		 *
+		 * @param {string} jsonString - The JSON string to escape double quotes in.
+		 * @returns {string} The modified JSON string with double quotes escaped.
+		 *
+		 * @example
+		 * // Returns 'This is a &quot;sample&quot; string.'
+		 * const escapedString = escapeDoubleQuotes('This is a "sample" string.');
+		 */
+		function escapeDoubleQuotes(jsonString) {
+			return jsonString.replace(/"/g, '&quot;');
+		}
+
 		function addRow(data) {
-			response = JSON.stringify(data)
+			let response = escapeDoubleQuotes(JSON.stringify(data))
 			var newRow = '<tr data-license-id="' + data.id + '" data-license-json="'+response+'">'
 			+ '<td class="cell c0" style="">' + data.id + '</td>'
 			+ '<td class="cell c1" style="">' + data.type + '</td>'
