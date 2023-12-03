@@ -31,5 +31,13 @@ $functions = array(
         'description' => 'add/edit license external service',
         'type'        => 'write',
         'ajax'        => true,
-    )
+    ),
+    'local_extendedfields_remove_license' => array(
+        'classname'   => 'local_extendedfields_external',
+        'methodname'  => 'remove_license',
+        'classpath'   => 'local/extendedfields/classes/external.php',
+        'description' => 'remove license external service',
+        'type'        => 'write',
+        'ajax'        => true,
+    ),
 );

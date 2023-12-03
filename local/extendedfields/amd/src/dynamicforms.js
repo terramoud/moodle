@@ -15,6 +15,24 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 			editForm(licenseData);
 		})
 
+		$('#license_list').on('click', '.license-remove-icon', function () {
+			let licenseData = JSON.parse($(this).parents('tr').attr("data-license-json"))
+			Ajax.call(
+				[{
+					methodname: 'local_extendedfields_remove_license',
+					args: {
+						id: licenseData.id
+					},
+					done: function (response) {
+						$('#license_list').find(`tr[data-license-id="${licenseData.id}"]`).remove();
+						alert(JSON.parse(response).message);
+					},
+					fail: function (response) {
+						alert(response);
+					}
+				}]);
+		})
+
 		$("#licenseForm").submit(function(e) {
 			e.preventDefault();
 
@@ -131,7 +149,7 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 
 		function addRow(data) {
 			let response = escapeDoubleQuotes(JSON.stringify(data))
-			let attachmentLink = data.itemid
+			let attachmentLink = data?.itemid
 				? '<br>'
 					+ '<a href="'+wwwroot+'/local/extendedfields/image.php?file=Licenses%2F' + data.id + '%2F' + data.itemid + '">'
 						+ '<i class="icon fa fa-paperclip fa-fw " title="Attachment" role="img" aria-label="Attachment"></i>'
@@ -144,7 +162,7 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 			+ '<td class="cell c2" style="">' + data.name + attachmentLink + '</td>'
 			+ '<td class="cell c3" style="">' + convertDateFormat(data.date_received) + '</td>'
 			+ '<td class="cell c4" style="">' + convertDateFormat(data.expiration_date) + '</td>'
-			+ '<td class="cell c5 lastcol" style=""><i class="icon fa fa-pencil fa-fw license-edit-icon" title="Edit license" role="img" aria-label="Edit license"></i><i class="icon fa fa-times fa-fw license-edit-icon" title="Remove license" role="img" aria-label="Remove license"></i></td>'
+			+ '<td class="cell c5 lastcol" style=""><i class="icon fa fa-pencil fa-fw license-edit-icon" title="Edit license" role="img" aria-label="Edit license"></i><i class="icon fa fa-times fa-fw license-remove-icon" title="Remove license" role="img" aria-label="Remove license"></i></td>'
 			+ '</tr>';
 
 			if ($("#user_license_id").val()) {

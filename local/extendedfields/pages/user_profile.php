@@ -200,8 +200,8 @@ foreach (local_extendedfields\course_helpers::get_states() as $code => $state) {
 			foreach ($license_columns as $c => $column) {
 			// var_dump([$c, $column]); die;
 				if ($c == "actions") {
-					$row->cells[] = $OUTPUT->pix_icon('i/edit', 'Edit license', 'moodle', ['class' => 'license-edit-icon']) . 
-					$OUTPUT->pix_icon('e/cancel', 'Remove license', 'moodle', ['class' => 'license-edit-icon']);
+					$row->cells[] = $OUTPUT->pix_icon('i/edit', 'Edit license', 'moodle', ['class' => 'license-edit-icon']) .
+					$OUTPUT->pix_icon('e/cancel', 'Remove license', 'moodle', ['class' => 'license-remove-icon']);
 				} elseif (in_array($c, ['date_received', 'expiration_date'])) {
 					$row->cells[] = $l->$c ? date("m/d/Y", (int)$l->$c) : "-";
 				} elseif ($c == "name" && $l->itemid) {
