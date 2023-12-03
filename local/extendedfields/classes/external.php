@@ -70,7 +70,7 @@ class local_extendedfields_external extends external_api {
 
 
         $returnData = $DB->get_records_sql("
-            SELECT ul.id, l.name, lt.type as type, DATE_FORMAT(FROM_UNIXTIME(ul.date_received), '%Y-%m-%d') as date_received, DATE_FORMAT(FROM_UNIXTIME(ul.expiration_date), '%Y-%m-%d') as expiration_date, ul.license_id 
+            SELECT ul.id, l.name, lt.type as type, DATE_FORMAT(FROM_UNIXTIME(ul.date_received), '%Y-%m-%d') as date_received, DATE_FORMAT(FROM_UNIXTIME(ul.expiration_date), '%Y-%m-%d') as expiration_date, ul.license_id, ul.itemid, ul.id_number, ul.ceu_pdu, ul.state 
             FROM {mcdean_license_user} ul
             LEFT JOIN {mcdean_license} l ON l.id = ul.license_id
             LEFT JOIN {mcdean_license_type} lt ON lt.id = l.license_type

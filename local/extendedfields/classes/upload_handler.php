@@ -60,10 +60,6 @@ function handleFileUpload($licenseId, $files)
     }
 
     $outfile = $destination;
-
-    // Respond with success
-    http_response_code(200); // OK
-    echo json_encode(['message' => 'Files uploaded successfully']);
 }
 
 // Function to generate a random filename
@@ -94,6 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $item->id = $licenseId;
     $item->itemid = str_replace($CFG->dataroot . "/Licenses/" . $licenseId . "/", "", $outfile);
     $DB->update_record('mcdean_license_user', $item);
+    // Respond with success
+    http_response_code(200); // OK
+    echo json_encode(['message' => 'Files uploaded successfully', 'itemid' => $item->itemid]);
 } else {
     http_response_code(405); // Method Not Allowed
     echo json_encode(['error' => 'Only POST requests are allowed']);

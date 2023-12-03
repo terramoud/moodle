@@ -32,8 +32,9 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 				args: {jsonformdata: json},
 				done: function(response) {
 					let responseObj = JSON.parse(response)
-					
-					if ($("#file").val()) {
+
+					const isFileAdded = $("#file").val();
+					if (isFileAdded) {
 						let newFormData = new FormData();
 						newFormData.append('license_id', responseObj.id)
 						newFormData.append('file', fileItem)
@@ -51,6 +52,10 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 							if (xhr.readyState === 4) {
 								if (xhr.status === 200) {
 									// alert('Form submitted successfully!');
+									let xhrResponse = JSON.parse(xhr.responseText);
+									responseObj.itemid = xhrResponse.itemid;
+									addRow(responseObj);
+									hideForm();
 								} else {
 									alert('Error submitting form. Please try again.');
 								}
@@ -59,6 +64,7 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 						};
 
 						xhr.send(newFormData);
+						return;
 					}
 					addRow(responseObj);
 					hideForm();
@@ -125,10 +131,17 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 
 		function addRow(data) {
 			let response = escapeDoubleQuotes(JSON.stringify(data))
+			let attachmentLink = data.itemid
+				? '<br>'
+					+ '<a href="'+wwwroot+'/local/extendedfields/image.php?file=Licenses%2F' + data.id + '%2F' + data.itemid + '">'
+						+ '<i class="icon fa fa-paperclip fa-fw " title="Attachment" role="img" aria-label="Attachment"></i>'
+						+ 'Attachment'
+					+ '</a>'
+				: '';
 			var newRow = '<tr data-license-id="' + data.id + '" data-license-json="'+response+'">'
 			+ '<td class="cell c0" style="">' + data.id + '</td>'
 			+ '<td class="cell c1" style="">' + data.type + '</td>'
-			+ '<td class="cell c2" style="">' + data.name + '</td>'
+			+ '<td class="cell c2" style="">' + data.name + attachmentLink + '</td>'
 			+ '<td class="cell c3" style="">' + convertDateFormat(data.date_received) + '</td>'
 			+ '<td class="cell c4" style="">' + convertDateFormat(data.expiration_date) + '</td>'
 			+ '<td class="cell c5 lastcol" style=""><i class="icon fa fa-pencil fa-fw license-edit-icon" title="Edit license" role="img" aria-label="Edit license"></i><i class="icon fa fa-times fa-fw license-edit-icon" title="Remove license" role="img" aria-label="Remove license"></i></td>'
