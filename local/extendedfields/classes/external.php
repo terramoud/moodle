@@ -54,8 +54,8 @@ class local_extendedfields_external extends external_api {
             "id_number" => $formdata->id_number,
             "license_id" => $formdata->license_id,
             "state" => $formdata->state,
-            "date_received" => strtotime($formdata->date_received),
-            "expiration_date" => strtotime($formdata->expiration_date),
+            "date_received" => $formdata->date_received ?: null,
+            "expiration_date" => $formdata->expiration_date ?: null,
             "ceu_pdu" => $formdata->ceu_pdu,
             "userid" => $USER->id,
             "createddate" => time()
@@ -70,7 +70,7 @@ class local_extendedfields_external extends external_api {
 
 
         $returnData = $DB->get_records_sql("
-            SELECT ul.id, l.name, lt.type as type, DATE_FORMAT(FROM_UNIXTIME(ul.date_received), '%Y-%m-%d') as date_received, DATE_FORMAT(FROM_UNIXTIME(ul.expiration_date), '%Y-%m-%d') as expiration_date, ul.license_id, ul.itemid, ul.id_number, ul.ceu_pdu, ul.state 
+            SELECT ul.id, l.name, lt.type as type, ul.date_received, ul.expiration_date, ul.license_id, ul.itemid, ul.id_number, ul.ceu_pdu, ul.state 
             FROM {mcdean_license_user} ul
             LEFT JOIN {mcdean_license} l ON l.id = ul.license_id
             LEFT JOIN {mcdean_license_type} lt ON lt.id = l.license_type

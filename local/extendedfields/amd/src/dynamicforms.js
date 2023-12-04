@@ -45,6 +45,7 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 				done: function (response) {
 					$('.attachment-container').hide();
 					$('#upload-image').show();
+					// TODO: move logic to function updateRow(response)
 					$('#license_list').find(`tr[data-license-id="${licenseId}"] a`).remove();
 					let licenseData = JSON.parse($('#license_list')
 						.find(`tr[data-license-id="${licenseId}"]`)
@@ -133,6 +134,11 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 			progressBar.innerHTML = '0%';
 		}
 
+		/**
+		 * @deprecated This function is marked for removal in future versions.
+		 * @param {number} timestamp - The timestamp to format.
+		 * @returns {string} The formatted date.
+		 */
 		function formatDate(timestamp) {
 			var date = new Date(timestamp * 1000);
 			var month = date.getMonth() + 1;
@@ -141,6 +147,11 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 			return year + '-' + month + '-' + day;
 		}
 
+		/**
+		 * @deprecated This function is marked for removal in future versions.
+		 * @param {string} inputDate - The date to convert.
+		 * @returns {string} The converted date format.
+		 */
 		function convertDateFormat(inputDate) {
 		    var parts = inputDate.split("-");
 		    return parts[1] + "/" + parts[2] + "/" + parts[0];
@@ -188,8 +199,8 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 			+ '<td class="cell c0" style="">' + data.id + '</td>'
 			+ '<td class="cell c1" style="">' + data.type + '</td>'
 			+ '<td class="cell c2" style="">' + data.name + attachmentLink + '</td>'
-			+ '<td class="cell c3" style="">' + convertDateFormat(data.date_received) + '</td>'
-			+ '<td class="cell c4" style="">' + convertDateFormat(data.expiration_date) + '</td>'
+			+ '<td class="cell c3" style="">' + (data.date_received || "-") + '</td>'
+			+ '<td class="cell c4" style="">' + (data.expiration_date || "-") + '</td>'
 			+ '<td class="cell c5 lastcol" style=""><i class="icon fa fa-pencil fa-fw license-edit-icon" title="Edit license" role="img" aria-label="Edit license"></i><i class="icon fa fa-times fa-fw license-remove-icon" title="Remove license" role="img" aria-label="Remove license"></i></td>'
 			+ '</tr>';
 
@@ -202,15 +213,16 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 	    }
 
 	    function editForm(data) {
-	    	console.log([data.license_id, formatDate(data.date_received), data.date_received])
+	    	// console.log([data.license_id, formatDate(data.date_received), data.date_received])
+	    	// console.log([data.date_received, data.expiration_date]);
 	    	$('#licenseForm [name="id_number"]').val(data.id_number);
 	    	$('#license_selector').val(parseInt(data.license_id));
 	    	$('#license_selector').trigger('change');
 
 	    	$('#user_license_id').val(data.id);
 	    	$('#licenseForm [name="state"]').val(data.state);
-	    	$('#licenseForm [name="date_received"]').val(formatDate(data.date_received));
-	    	$('#licenseForm [name="expiration_date"]').val(formatDate(data.expiration_date));
+	    	$('#licenseForm [name="date_received"]').val(data.date_received);
+	    	$('#licenseForm [name="expiration_date"]').val(data.expiration_date);
 	    	$('#licenseForm [name="ceu_pdu"]').val(data.ceu_pdu);
 	    }
 
