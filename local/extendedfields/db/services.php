@@ -40,4 +40,12 @@ $functions = array(
         'type'        => 'write',
         'ajax'        => true,
     ),
+    'local_extendedfields_remove_license_file' => array(
+        'classname'   => 'local_extendedfields_external',
+        'methodname'  => 'remove_license_file',
+        'classpath'   => 'local/extendedfields/classes/external.php',
+        'description' => 'remove license image external service',
+        'type'        => 'write',
+        'ajax'        => true,
+    ),
 );

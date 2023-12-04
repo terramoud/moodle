@@ -11,14 +11,13 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 		$('#license_list').on('click', '.license-edit-icon', function() {
 			let licenseData = JSON.parse($(this).parents('tr').attr("data-license-json"))
 			console.log(licenseData)
-			showForm();
+			showForm(licenseData);
 			editForm(licenseData);
 		})
 
 		$('#license_list').on('click', '.license-remove-icon', function () {
 			let licenseData = JSON.parse($(this).parents('tr').attr("data-license-json"))
-			Ajax.call(
-				[{
+			Ajax.call([{
 					methodname: 'local_extendedfields_remove_license',
 					args: {
 						id: licenseData.id
@@ -32,6 +31,35 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 					}
 				}]);
 		})
+
+		$('#remove-attachment').on('click', function() {
+			let licenseId = $(this).attr("data-attachment-id");
+			if (!licenseId) {
+				$('#remove-attachment').attr('data-attachment-id', '');
+			}
+			Ajax.call([{
+				methodname: 'local_extendedfields_remove_license_file',
+				args: {
+					id: licenseId
+				},
+				done: function (response) {
+					$('.attachment-container').hide();
+					$('#upload-image').show();
+					$('#license_list').find(`tr[data-license-id="${licenseId}"] a`).remove();
+					let licenseData = JSON.parse($('#license_list')
+						.find(`tr[data-license-id="${licenseId}"]`)
+						.attr("data-license-json"));
+					licenseData.itemid = null;
+					$('#license_list')
+						.find(`tr[data-license-id="${licenseId}"]`)
+						.attr("data-license-json", JSON.stringify(licenseData));
+					alert(JSON.parse(response).message);
+				},
+				fail: function (response) {
+					alert(response);
+				}
+			}]);
+		});
 
 		$("#licenseForm").submit(function(e) {
 			e.preventDefault();
@@ -186,7 +214,19 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 	    	$('#licenseForm [name="ceu_pdu"]').val(data.ceu_pdu);
 	    }
 
-        function showForm() {
+        function showForm(data) {
+			// upload an attachment from the license being edited
+			if (data.itemid) {
+				$('.attachment-container').show();
+				$('#upload-image').hide();
+				$('.attachment-container a').attr('href', `${wwwroot}/local/extendedfields/image.php?file=Licenses%2F${data.id}%2F${data.itemid}`);
+				$('.attachment-container a').text(data.itemid);
+				$('#remove-attachment').attr('data-attachment-id', data.id);
+			}
+			if (!data.itemid) {
+				$('.attachment-container').hide();
+				$('#upload-image').show();
+			}
             $('.ajax-form.licence-form').show();
             $('#showFormBtn').hide();
         }
@@ -196,7 +236,6 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
             $('#showFormBtn').show();
             clearForm();
         }
-
 	}
 
 

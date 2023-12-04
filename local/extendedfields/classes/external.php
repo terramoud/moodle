@@ -137,7 +137,7 @@ class local_extendedfields_external extends external_api {
                 FROM {mcdean_license_user} ul
                 WHERE ul.id = :id
             ", ['id' => $id]);
-            $licenseFileName = !$returnData ? $returnData->itemid : 0;
+            $licenseFileName = $returnData ? $returnData->itemid : 0;
             $destination = "$CFG->dataroot/Licenses/$id/$licenseFileName";
             // Attempt to remove the file
             if (file_exists($destination) && !unlink($destination)) {
@@ -145,8 +145,71 @@ class local_extendedfields_external extends external_api {
             }
             if ($DB->delete_records('mcdean_license_user', array('id' => $id))) {
                 return json_encode(['message' => 'License removed successfully.', 'id' => $id]);
+                //TODO: invert if condition
             }
             return json_encode(['message' => 'An error occurred while removing license.', 'id' => $id]);
+        } catch (dml_exception $e) {
+            return json_encode(['message' => $e->getMessage(), 'id' => $id]);
+        }
+    }
+
+    /**
+     * Provides information about the parameters for removing a license file.
+     *
+     * @return external_function_parameters Returns an external function parameters object
+     *   specifying the parameter types and descriptions.
+     */
+    public static function remove_license_file_parameters() {
+        return new external_function_parameters(
+            array(
+                'id' => new external_value(PARAM_INT, 'The ID of license for which the file needs to be removed', VALUE_REQUIRED),
+            )
+        );
+    }
+
+    /**
+     * Provides information about the return type for removing a license file.
+     *
+     * @return external_value Returns a JSON data representing the result of removing a license file.
+     *   The format of the JSON: {"message": "Success/Error message", "id": ID}
+     */
+    public static function remove_license_file_returns() {
+        return new external_value(PARAM_RAW, 'JSON data representing the result of removing a license file');
+    }
+
+    /**
+     * Remove the file associated with a license.
+     *
+     * @param int $id The ID of the license for which the file needs to be removed.
+     *
+     * @return string JSON data representing the result of removing a license file.
+     *   Format: {"message": "Success/Error message", "id": ID}
+     *
+     * @global moodle_database $DB
+     * @global object $CFG
+     */
+    public static function remove_license_file($id) {
+        global $DB, $CFG;
+        // Validate license ID (should be an integer)
+        if (!is_numeric($id)) {
+            return json_encode(['message' => 'Invalid license ID', 'id' => $id]);
+        }
+        try {
+            $returnData = $DB->get_record_sql("
+                SELECT ul.itemid
+                FROM {mcdean_license_user} ul
+                WHERE ul.id = :id
+            ", ['id' => $id]);
+            $licenseFileName = $returnData ? $returnData->itemid : 0;
+            $destination = "$CFG->dataroot/Licenses/$id/$licenseFileName";
+            // Attempt to remove the file
+            if (file_exists($destination) && !unlink($destination)) {
+                return json_encode(['message' => 'Failed to remove the license file', 'id' => $id]);
+            }
+            if (!$DB->update_record('mcdean_license_user', (object)['id' => $id, 'itemid' => null])) {
+                return json_encode(['message' => 'Failed to update license file name from db', 'id' => $id]);
+            }
+            return json_encode(['message' => 'License file removed successfully.', 'id' => $id]);
         } catch (dml_exception $e) {
             return json_encode(['message' => $e->getMessage(), 'id' => $id]);
         }

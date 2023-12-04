@@ -256,7 +256,7 @@ foreach (local_extendedfields\course_helpers::get_states() as $code => $state) {
 				</div>
 			</div>
 
-			<div class="row mb-2">
+			<div id="upload-image" class="row mb-2">
 				<div class="col-md-3 form-label">Upload image:</div>
 				<div class="col-md-9">
 					<label class="file">
@@ -264,6 +264,15 @@ foreach (local_extendedfields\course_helpers::get_states() as $code => $state) {
 						<span class="file-custom"></span>
 					</label>
 					<progress class="progress" id="fileProgressBar" value="0" max="100" style="width:100%"></progress>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-3 attachment-container">
+					<a href="#">
+						<i class="icon fa fa-paperclip fa-fw " title="Attachment" role="img" aria-label="Attachment"></i>
+					</a>
+					<button id="remove-attachment" type="button" class="btn btn-sm btn-danger">Remove</button>
 				</div>
 			</div>
 
