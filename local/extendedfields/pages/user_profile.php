@@ -306,6 +306,12 @@ foreach (local_extendedfields\course_helpers::get_states() as $code => $state) {
 
 </div>
 
+<!-- Include additional jQuery but before select2.js -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+	var $noConflictjQuery = jQuery.noConflict();
+</script>
+
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="<?= $CFG->wwwroot ?>/local/extendedfields/libs/wtf-forms.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -342,7 +348,7 @@ foreach (local_extendedfields\course_helpers::get_states() as $code => $state) {
 	    // });
 
 
-	    $('#license_selector').select2({
+		$noConflictjQuery('#license_selector').select2({
 	    	width: '100%'
 	    });
 	    updateLicenseProperties();

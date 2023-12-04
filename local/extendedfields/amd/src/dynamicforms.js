@@ -216,8 +216,8 @@ define(['jquery', 'core/ajax'], function($, Ajax) {
 	    	// console.log([data.license_id, formatDate(data.date_received), data.date_received])
 	    	// console.log([data.date_received, data.expiration_date]);
 	    	$('#licenseForm [name="id_number"]').val(data.id_number);
-	    	$('#license_selector').val(parseInt(data.license_id));
-	    	$('#license_selector').trigger('change');
+	    	$noConflictjQuery('#license_selector').val(parseInt(data.license_id));
+	    	$noConflictjQuery('#license_selector').trigger('change');
 
 	    	$('#user_license_id').val(data.id);
 	    	$('#licenseForm [name="state"]').val(data.state);
