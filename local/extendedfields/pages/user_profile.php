@@ -267,8 +267,9 @@ foreach (local_extendedfields\course_helpers::get_states() as $code => $state) {
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="col-md-3 attachment-container">
+			<div class="row mb-2">
+				<div class="col-md-3 form-label">Uploaded image:</div>
+				<div class="col-md-9 attachment-container">
 					<a href="#">
 						<i class="icon fa fa-paperclip fa-fw " title="Attachment" role="img" aria-label="Attachment"></i>
 					</a>
